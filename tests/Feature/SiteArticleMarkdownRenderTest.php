@@ -8,7 +8,9 @@ use App\Models\Category;
 use App\Models\SiteSetting;
 use App\Support\Site\ArticleHtmlPresenter;
 use App\Support\Site\SiteSettingsBag;
+use Illuminate\Foundation\Vite;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\HtmlString;
 use Tests\TestCase;
 
 class SiteArticleMarkdownRenderTest extends TestCase
@@ -218,6 +220,24 @@ MD);
             ->assertDontSee('unpkg.com/lucide', false)
             ->assertDontSee('<style>', false)
             ->assertDontSee('data-hot-carousel]).forEach', false);
+    }
+
+    public function test_production_frontend_theme_uses_compiled_tailwind_assets(): void
+    {
+        $this->app->detectEnvironment(static fn (): string => 'production');
+        $this->swap(Vite::class, new class extends Vite
+        {
+            public function __invoke($entrypoints, $buildDirectory = null): HtmlString
+            {
+                return new HtmlString('<link rel="stylesheet" href="/build/assets/app.css">');
+            }
+        });
+
+        $this->get(route('site.home'))
+            ->assertOk()
+            ->assertSee('/build/assets/app.css', false)
+            ->assertDontSee('js/tailwindcss.play-cdn.js', false)
+            ->assertDontSee('cdn.tailwindcss.com', false);
     }
 
     public function test_homepage_renders_configured_carousel_and_sidebar_feed_panel(): void

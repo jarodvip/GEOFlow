@@ -1,5 +1,6 @@
 ARG COMPOSER_IMAGE=composer:2
 ARG PHP_FPM_IMAGE=php:8.4-fpm-bookworm
+ARG NODE_IMAGE=node:22-bookworm
 
 FROM ${COMPOSER_IMAGE} AS vendor
 
@@ -33,6 +34,17 @@ RUN composer dump-autoload \
     --classmap-authoritative \
     --no-scripts \
  && BROADCAST_CONNECTION=null php artisan package:discover --ansi
+
+FROM ${NODE_IMAGE} AS frontend
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY resources ./resources
+COPY vite.config.js ./
+RUN npm run build
 
 FROM ${PHP_FPM_IMAGE}
 
@@ -75,6 +87,7 @@ COPY docker/entrypoint.prod.sh /usr/local/bin/geoflow-entrypoint-prod
 RUN chmod +x /usr/local/bin/geoflow-entrypoint-prod
 
 COPY --from=vendor /app /var/www/html
+COPY --from=frontend /app/public/build /var/www/html/public/build
 
 ENTRYPOINT ["/usr/local/bin/geoflow-entrypoint-prod"]
 CMD ["php-fpm", "-F"]

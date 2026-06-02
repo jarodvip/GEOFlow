@@ -52,6 +52,8 @@ GEOFLOW_SELF_DELETE=1 bash geoflow-docker-deploy.sh
 
 完整变量说明见 `deploy-scripts/README.md`。
 
+如果采用新云服务器 + Caddy 自动 HTTPS 的部署方式，可参考实操记录：`docs/deployment/CLOUD_SERVER_DEPLOYMENT.md`。
+
 ## 2. 准备环境文件
 
 ```bash

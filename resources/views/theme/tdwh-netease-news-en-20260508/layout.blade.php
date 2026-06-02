@@ -18,7 +18,7 @@
     @endif
     <link rel="canonical" href="{{ $canonicalUrl ?? url()->current() }}">
     @stack('head')
-    <script src="{{ asset('js/tailwindcss.play-cdn.js') }}"></script>
+    @include('partials.tailwind')
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('themes/tdwh-netease-news-en-20260508/theme.css') }}">

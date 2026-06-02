@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }}</title>
-    <script src="{{ asset('js/tailwindcss.play-cdn.js') }}"></script>
+    @include('partials.tailwind')
 </head>
 <body class="min-h-screen bg-gray-50 flex items-center justify-center p-6">
     <div class="text-center max-w-lg">

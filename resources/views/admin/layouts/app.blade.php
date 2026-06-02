@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@isset($pageTitle){{ $pageTitle }} — @endisset{{ $adminBrandName }}</title>
-    <script src="{{ asset('js/tailwindcss.play-cdn.js') }}"></script>
+    @include('partials.tailwind')
     <script src="{{ asset('js/lucide.min.js') }}"></script>
     @stack('styles')
 </head>
